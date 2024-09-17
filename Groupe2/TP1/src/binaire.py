@@ -6,7 +6,9 @@ def afficher_binaire(nombre):
     
     bits = []
     
+    # Boucle pour convertir le nombre en binaire
     while nombre > 0:
+        # Ajouter le bit de poids faible (reste de la division par 2) à la liste
         bits.append(str(nombre % 2))
         nombre //= 2
     
