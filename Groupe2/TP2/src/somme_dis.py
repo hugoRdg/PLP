@@ -8,12 +8,12 @@ import dis
 """
 
 def calculer_somme(n: int) -> int:
-       somme = 0
-       i = 0
-       while i < n:
-           somme += i
-           i += 1
-       return somme
+    somme = 0
+    i = 0
+    while i < n:
+        somme += i
+        i += 1
+    return somme
 
 def main() -> None:
     n = 10
