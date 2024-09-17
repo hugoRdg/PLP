@@ -1,1 +1,3 @@
-1. RODRIGUES Hugo
+# Contributors.md
+
+## 1. RODRIGUES Hugo

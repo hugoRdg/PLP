@@ -1,3 +1,5 @@
+# calcul.py
+
 def main():
     num1 = int(input("Entrez le premier nombre : "))
     num2 = int(input("Entrez le second nombre : "))

@@ -1,3 +1,5 @@
+#variables.py
+
 # Déclaration et initialisation des variables
 i = 42                        # int
 f = 3.14                      # float

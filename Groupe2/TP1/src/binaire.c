@@ -1,3 +1,5 @@
+// binaire.c
+
 #include <stdio.h>
 
 void afficherBinaire(int nombre) {

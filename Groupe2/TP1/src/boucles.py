@@ -1,3 +1,6 @@
+# boucles.py
+
+###########  BOUCLES FOR  ###########
 # Demande la taille du triangle
 # taille = int(input("Entrez la taille du triangle (inférieure à 10) : "))
 
@@ -13,7 +16,10 @@
 #             else:
 #                 print("#", end=" ")
 #         print()
+###########  BOUCLES FOR ###########
 
+
+###########  BOUCLES WHILE ###########
 # Demande la taille du triangle
 taille = int(input("Entrez la taille du triangle (inférieure à 10) : "))
 
@@ -33,3 +39,4 @@ else:
             j += 1
         print()
         i += 1
+###########  BOUCLES WHILE ###########

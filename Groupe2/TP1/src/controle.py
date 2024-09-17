@@ -1,3 +1,5 @@
+# controle.py
+
 # Divisibilité par 4 mais pas par 6
 print("Nombres de 1 à 1000 divisibles par 4 mais pas par 6 :")
 for i in range(1, 1001):

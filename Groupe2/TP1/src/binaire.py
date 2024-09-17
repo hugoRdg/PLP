@@ -1,3 +1,5 @@
+# binaire.py
+
 def afficher_binaire(nombre):
     if nombre == 0:
         return "0"
@@ -16,5 +18,6 @@ def main():
     binaire = afficher_binaire(nombre)
     print(f"Représentation binaire : {binaire}")
 
+# Cette condition vérifie si le script est exécuté directement plutôt qu'importé comme module
 if __name__ == "__main__":
     main()

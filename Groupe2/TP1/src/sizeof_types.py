@@ -1,3 +1,5 @@
+# sizeof_types.py
+
 import sys
 
 print("Taille des types de base en Python :")
