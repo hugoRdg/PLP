@@ -99,5 +99,50 @@ POP_JUMP_IF_FALSE pour sauter à la fin si la condition est fausse.
 JUMP_ABSOLUTE pour revenir au début de la boucle après chaque itération.
 ```
 
-# Exercice 2.5
-## 1.
+# Exercice 2.8
+## 1. Débogage
+```
+C (gdb) : Utilisation d'un débogueur comme gdb pour suivre l'exécution, définir des points d'arrêt, et inspecter les variables. Complexité accrue pour gérer les erreurs de mémoire (segmentation fault, etc.).
+```
+```
+Python (pdb) : Utilisation de pdb, intégré à Python, pour exécuter le code ligne par ligne. Débogage plus simple, avec gestion automatique de la mémoire et des exceptions.
+```
+## 2. Chaîne de Compilation
+```
+C (gcc) : La compilation en C comprend plusieurs étapes (prétraitement, compilation, assemblage, et lien). Plus de contrôle, mais complexité dans la gestion des erreurs et dépendances.
+```
+
+
+```
+Python : Python est interprété, pas besoin de compilation manuelle. Le bytecode est généré automatiquement pour accélérer les exécutions suivantes.
+```
+
+## 3. Inspection de Code
+
+```
+C : Inspection via des outils comme objdump ou nm, avec une analyse au niveau assembleur ou machine, ce qui demande des connaissances avancées.
+```
+
+
+```
+Python (dis) : dis permet d'inspecter le bytecode Python de manière simple, rendant l'analyse plus accessible.
+```
+## 4. Manipulation de Chaînes de Caractères
+```
+C : Manipulation via des fonctions comme strcpy et strlen. Plus de contrôle, mais gestion manuelle de la mémoire et risque d'erreurs (overflow).
+```
+
+
+```
+Python : Manipulation intuitive grâce aux méthodes d'objets chaîne et aux f-strings, avec gestion automatique de la mémoire.
+```
+
+## 5. Gestion des Données et Recherche dans les Fichiers
+```
+C : Utilisation de struct pour les données et de fonctions bas-niveau comme fopen, fgets pour la manipulation des fichiers. Plus complexe et manuel.
+```
+
+
+```
+Python : Utilisation de classes pour gérer les données et des fonctions simples comme open pour lire et traiter les fichiers. Plus intuitif et sécurisé.
+```
