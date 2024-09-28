@@ -14,3 +14,8 @@ if __name__ == "__main__":
     dis.dis(calculer_aire)
     main()
 
+# Observations sur le bytecode généré :
+# LOAD_CONST : Charge la constante 3.14159 directement.
+# LOAD_FAST : Charge la variable locale rayon.
+# BINARY_MULTIPLY : Multiplie rayon par rayon.
+# Retourne le résultat, le bytecode est plus simple car la constante est utilisée.

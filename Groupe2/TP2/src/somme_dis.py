@@ -25,3 +25,9 @@ if __name__ == "__main__":
     dis.dis(calculer_somme)
     main()
 
+# Instructions spécifiques du bytecode pour la boucle while :
+# SETUP_LOOP : Prépare la boucle et la gestion des exceptions (interruption).
+# LOAD_FAST : Charge i et n depuis les variables locales.
+# COMPARE_OP : Compare i avec n.
+# POP_JUMP_IF_FALSE : Saute en dehors de la boucle si la condition est fausse.
+# INCREMENT : Augmente la valeur de i à chaque itération.
