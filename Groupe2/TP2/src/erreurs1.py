@@ -2,8 +2,13 @@ from typing import List
 import pdb
 
 def double_values(tableau: List[int]) -> None:
+    # Boucle sur chaque élément du tableau
     for compteur in range(len(tableau)):
-        tableau[compteur] *= 2 # Multiplier tous les éléments par 2
+        
+        # Multiplier tous les éléments par 2
+        tableau[compteur] *= 2 
+
+        # Déclencher pdb à chaque itération pour observer l'état du tableau et du compteur
         pdb.set_trace()
 
     return tableau

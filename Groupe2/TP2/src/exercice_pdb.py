@@ -1,8 +1,10 @@
 from typing import List
 
 def double_values(tableau: List[int]) -> None:
+    # Boucle sur chaque élément du tableau
     for compteur in range(len(tableau)):
-        tableau[compteur] *= 2  # Multiplier tous les éléments par 2
+        # Multiplier tous les éléments par 2
+        tableau[compteur] *= 2
 
     return tableau
 

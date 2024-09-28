@@ -1,12 +1,13 @@
 from typing import List
 
 def double_values(tableau: List[int]) -> None:
+    # Boucle sur chaque élément du tableau
     for compteur in range(len(tableau)):
-        # Introduire une erreur : parfois multiplier par 3 au lieu de 2
+        # Introduire une erreur : multiplier par 3 les éléments impairs, par 2 les pairs
         if compteur % 2 == 0:
-            tableau[compteur] *= 2
+            tableau[compteur] *= 2  # Multiplier les éléments d'indice pair par 2
         else:
-            tableau[compteur] *= 3
+            tableau[compteur] *= 3  # Multiplier les éléments d'indice impair par 3
 
     return tableau
 
@@ -18,4 +19,3 @@ resultat = double_values(tableau)
 
 # Afficher le résultat final
 print(resultat)
-
