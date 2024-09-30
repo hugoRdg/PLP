@@ -19,11 +19,13 @@ void afficher_version() {
 // Fonction qui affiche les commandes disponibles
 void afficher_aide() {
     printf("Commandes disponibles :\n");
-    printf("  echo <text> : Affiche le texte fourni.\n");
+    printf("  echo <texte> : Affiche le texte fourni.\n");
     printf("  date : Affiche la date actuelle.\n");
     printf("  version : Affiche la version de l'interpréteur.\n");
+    printf("  quitter : Quitte le programme.\n");
     printf("  quit : Quitte le programme.\n");
     printf("  help : Affiche cette aide.\n");
+    printf("  aide : Affiche cette aide.\n");
 }
 
 // Fonction pour traiter la commande echo
@@ -41,7 +43,7 @@ void traiter_echo(const char *commande) {
 
 // Fonction pour quitter l'interpreteur
 void traiter_quit(){
-    // Quitte le programme si la commande est "quit"
+    // Quitte le programme si la commande est "quit" ou "quitter"
     printf("Arret...\n");
 }
 
@@ -55,7 +57,6 @@ void traiter_date(const char *commande){
  * Programme qui simule un interpréteur de commandes simple.
  * Il lit les commandes utilisateur et les traite en fonction de leur contenu.
  */
-
 int main()
 {
     int continuer = 1; // Variable pour contrôler la boucle principale
@@ -65,7 +66,9 @@ int main()
         {"echo", traiter_echo},
         {"date", traiter_date},
         {"version", afficher_version},
+        {"quitter", traiter_quit},
         {"quit", traiter_quit},
+        {"aide", afficher_aide},
         {"help", afficher_aide}
     };
 
@@ -103,7 +106,7 @@ int main()
 
         if (!commande_trouvee) {
             // Affiche un message d'erreur si la commande est inconnue
-            printf("Commande non reconnue. Essayez 'echo <text>' pour afficher du texte, ou tapez 'quit' pour quitter.\n");
+            printf("Commande non reconnue. Essayez 'echo <texte>' pour afficher du texte, 'aide' ou 'help' pour afficher l'aide, ou 'quitter' ou 'quit' pour quitter.\n");
         }
 
         printf("\n"); // Saut de ligne après la sortie
