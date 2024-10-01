@@ -62,29 +62,41 @@ void to_lower(char *str) {
     }
 }
 
-// Fonction pour vérifier si deux chaînes sont similaires (tolère les erreurs mineures)
+// Fonction pour vérifier si deux chaînes sont similaires
 int sont_similaires(const char *str1, const char *str2) {
+    // Calcule la longueur des deux chaînes
     int len1 = strlen(str1);
     int len2 = strlen(str2);
-    if (abs(len1 - len2) > 2) return 0; // Trop différent en longueur
+    
+    // Si la différence de longueur est supérieure à 2, les chaînes sont considérées comme trop différentes
+    if (abs(len1 - len2) > 2) return 0;
 
-    int diff = 0;
-    int i = 0, j = 0;
+    int diff = 0;  // Compteur de différences entre les chaînes
+    int i = 0, j = 0;  // Indices pour parcourir str1 et str2 respectivement
+    
+    // Parcourt les deux chaînes simultanément
     while (i < len1 && j < len2) {
+        // Compare les caractères en les convertissant en minuscules
         if (tolower((unsigned char)str1[i]) != tolower((unsigned char)str2[j])) {
-            diff++;
+            diff++; 
+            
             if (diff > 2) return 0; // Trop de différences
-            if (len1 > len2) i++;
-            else if (len2 > len1) j++;
+            
+            // Gestion des différences de longueur ou des caractères insérés/supprimés
+            if (len1 > len2) i++;  // str1 plus longue, on avance dans str1
+            else if (len2 > len1) j++;  // str2 plus longue, on avance dans str2
             else {
+                // Même longueur, on avance dans les deux chaînes
                 i++;
                 j++;
             }
         } else {
+            // Les caractères sont identiques, on avance dans les deux chaînes
             i++;
             j++;
         }
     }
+
     return 1;
 }
 
@@ -124,7 +136,7 @@ int main()
         char commande_lower[1024];
         strcpy(commande_lower, commande);
         to_lower(commande_lower);   
-        
+
         int commande_trouvee = 0; // Variable pour vérifier si la commande a été trouvée
 
         // Traite la commande en fonction de son contenu
