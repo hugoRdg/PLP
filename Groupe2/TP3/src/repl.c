@@ -2,6 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "lexer.h"
+#include "parseur.h"
+#include "evaluation.h"
+#include "postfixe.h"
 
 // Version de l'interpréteur
 #define VERSION "1.0.0"
@@ -114,7 +118,7 @@ int main()
         {"date", "date", traiter_date},
         {"version", "version", afficher_version},
         {"quit", "quitter", traiter_quit},
-        {"help", "aide", afficher_aide}
+        {"help", "aide", afficher_aide},
     };
 
     int nombre_commandes = sizeof(commandes) / sizeof(commandes[0]);
@@ -138,6 +142,7 @@ int main()
         to_lower(commande_lower);   
 
         int commande_trouvee = 0; // Variable pour vérifier si la commande a été trouvée
+        int expression_valide = 0; // Variable pour vérifier si une expression a été évaluée
 
         // Traite la commande en fonction de son contenu
         for (int i = 0; i < nombre_commandes; i++) {
@@ -149,8 +154,43 @@ int main()
             }
         }
 
+        // Si aucune commande reconnue n'a été trouvée, on essaie d'évaluer l'expression mathématique
         if (!commande_trouvee) {
-            // Affiche un message d'erreur si la commande est inconnue
+            // Étape 1 : Tokenizeur
+            Token *tokens = tokenize(commande);
+
+            if (tokens != NULL) {   
+                // Conversion de l'expression infixée en postfixée
+                char expression_postfixee[1024];
+                infixe_vers_postfixe(tokens, expression_postfixee);
+                
+                // Vérification que l'expression postfixée est correcte
+                if (strlen(expression_postfixee) > 0) {
+                    printf("Expression en notation postfixe : %s\n", expression_postfixee);
+
+                    // Étape 2 : Parseur
+                    ExpressionMath expr = parse(tokens);
+                    if (!expr.erreur) {
+                        // Étape 3 : Évaluation de l'expression en notation postfixée
+                        double resultat = evaluer_postfixe(expression_postfixee);
+                        printf("Resultat : %.2f\n", resultat);
+                        expression_valide = 1;
+                    } else {
+                        printf("Erreur de syntaxe : %s\n", expr.messageErreur);
+                    }
+                } else {
+                    printf("Erreur de conversion en notation postfixe.\n");
+                }
+
+                // Libération des ressources
+                free_tokens(tokens);
+            } else {
+                printf("Erreur de tokenisation : l'expression ne peut être interpretee.\n");
+            }
+        }
+
+        // Affiche un message d'erreur si aucune commande et aucune expression valide n'ont été trouvées
+        if (!commande_trouvee && !expression_valide) {
             printf("Commande non reconnue. Essayez 'echo <texte>' pour afficher du texte, 'aide' ou 'help' pour afficher l'aide, ou 'quitter' ou 'quit' pour quitter.\n");
         }
 

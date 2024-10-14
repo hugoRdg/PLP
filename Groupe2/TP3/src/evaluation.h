@@ -3,7 +3,7 @@
 
 #include "parseur.h"
 
-// Fonction pour évaluer une expression mathématique
-double evaluate(Expression* expr, char* error_message);
+double evaluer(ExpressionMath expr);
+double evaluer_postfixe(const char* expression_postfixee);
 
-#endif 
+#endif

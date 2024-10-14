@@ -1,36 +1,44 @@
 #include "parseur.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-Expression* parse(Token* tokens, size_t token_count) {
-    Expression* expr = malloc(sizeof(Expression));
-    int op_found = 0; // L'opérateur a été trouvé
+ExpressionMath parse(Token* tokens) {
+    ExpressionMath expr = {0};
+    int index = 0;
 
-    for (size_t i = 0; i < token_count; i++) {
-        if (tokens[i].type == TOKEN_NUMBER) {
-            if (!op_found) {
-                // Le premier opérande
-                expr->operand1 = tokens[i].value;
-                op_found = 1;
-            } else {
-                // Le deuxième opérande
-                expr->operand2 = tokens[i].value;
-            }
-        } else if (tokens[i].type == TOKEN_OPERATOR) {
-            // Un opérande avant l'opérateur
-            if (op_found && i + 1 < token_count && tokens[i + 1].type == TOKEN_NUMBER) {
-                expr->operator = tokens[i].operator; // Enregistrer l'opérateur
-            } else {
-                free(expr);
-                return NULL; // opérateur mal placé
-            }
-        }
+    // Vérifier le premier opérande
+    if (tokens[index].type != TOKEN_NUMBER) {
+        expr.erreur = 1;
+        expr.messageErreur = "Nombre attendu"; 
+        return expr;
     }
+    expr.operande1 = tokens[index].value;
+    index++;
 
-    // Vérifier si l'expression est complète
-    if (!op_found || tokens[token_count - 1].type != TOKEN_NUMBER) {
-        free(expr);
-        return NULL;
+    // Vérifier l'opérateur
+    if (tokens[index].type != TOKEN_OPERATOR) {
+        expr.erreur = 1;
+        expr.messageErreur = "Operateur attendu";
+        return expr;
+    }
+    expr.operation = tokens[index].operator;
+    index++;
+
+    // Vérifier le deuxième opérande
+    if (tokens[index].type != TOKEN_NUMBER) {
+        expr.erreur = 1;
+        expr.messageErreur = "Nombre attendu";
+        return expr;
+    }
+    expr.operande2 = tokens[index].value;
+    index++;
+
+    // Vérifier s'il reste des tokens sans donner d'erreur si c'est une conversion postfixée
+    if (tokens[index].type != TOKEN_END && tokens[index].type != TOKEN_OPERATOR) {
+        expr.erreur = 1;
+        expr.messageErreur = "Fin d'expression inattendue";
+        return expr;
     }
 
     return expr;

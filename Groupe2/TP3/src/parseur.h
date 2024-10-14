@@ -3,14 +3,14 @@
 
 #include "lexer.h"
 
-// Structure représentant une opération mathématique
 typedef struct {
-    char operator;   
-    double operand1; 
-    double operand2;
-} Expression;
+    int erreur;
+    const char *messageErreur;
+    char operation;
+    double operande1;
+    double operande2;
+} ExpressionMath;
 
-// Fonction pour parser une liste de jetons et créer une expression
-Expression* parse(Token* tokens, size_t token_count);
+ExpressionMath parse(Token* tokens);
 
 #endif

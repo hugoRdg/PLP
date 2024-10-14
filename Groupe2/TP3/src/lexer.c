@@ -1,55 +1,53 @@
 #include "lexer.h"
-#include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
-#include <malloc.h>
+#include <string.h>
 
-Token* tokenize(const char* expression, size_t* token_count) {
-    size_t capacity = 10; // Capacité initiale pour les jetons
-    Token* tokens = malloc(capacity * sizeof(Token)); // Tableau dynamique de jetons
-    *token_count = 0;
+#define MAX_TOKENS 100
 
-    for (size_t i = 0; i < strlen(expression);) {
-        // On ignore les espaces
-        if (isspace(expression[i])) {
-            i++;
+Token* tokenize(const char* input) {
+    Token* tokens = malloc(sizeof(Token) * MAX_TOKENS);
+    int token_count = 0;
+
+    while (*input != '\0' && token_count < MAX_TOKENS - 1) {
+        // Ignorer les espaces
+        if (isspace(*input)) {
+            input++;
             continue;
         }
 
-        // Nombres
-        if (isdigit(expression[i]) || (expression[i] == '.' && isdigit(expression[i + 1]))) {
+        // Traiter les nombres
+        if (isdigit(*input) || *input == '.') {
             char* end;
-            double value = strtod(&expression[i], &end);
-            if (end == &expression[i]) { // Vérification d'erreur
-                free(tokens);
-                return NULL;
+            double value = strtod(input, &end);
+            if (end != input) {
+                tokens[token_count].type = TOKEN_NUMBER;
+                tokens[token_count].value = value;
+                token_count++;
+                input = end;
+                continue;
             }
-            tokens[*token_count].type = TOKEN_NUMBER;
-            tokens[*token_count].value = value;
-            (*token_count)++;
-            i = end - expression; // Mise à jour de l'index
-        }
-        // Opérateurs
-        else if (strchr("+-*/", expression[i]) != NULL) {
-            tokens[*token_count].type = TOKEN_OPERATOR;
-            tokens[*token_count].operator = expression[i];
-            (*token_count)++;
-            i++;
-        }
-        // Erreurs de syntaxe
-        else {
-            tokens[*token_count].type = TOKEN_ERROR;
-            free(tokens);
-            return NULL;
         }
 
-        // Réallocation
-        if (*token_count >= capacity) {
-            capacity *= 2;
-            tokens = realloc(tokens, capacity * sizeof(Token));
+        // Traiter les opérateurs
+        if (*input == '+' || *input == '-' || *input == '*' || *input == '/') {
+            tokens[token_count].type = TOKEN_OPERATOR;
+            tokens[token_count].operator = *input;
+            token_count++;
+            input++;
+            continue;
         }
+
+        // Caractère non reconnu
+        tokens[token_count].type = TOKEN_ERROR;
+        token_count++;
+        break;
     }
 
-    tokens[*token_count].type = TOKEN_END; // Fin des jetons
+    tokens[token_count].type = TOKEN_END;
     return tokens;
+}
+
+void free_tokens(Token* tokens) {
+    free(tokens);
 }
