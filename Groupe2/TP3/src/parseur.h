@@ -9,6 +9,7 @@ typedef struct {
     char operation;
     double operande1;
     double operande2;
+    int index;
 } ExpressionMath;
 
 ExpressionMath parse(Token* tokens);

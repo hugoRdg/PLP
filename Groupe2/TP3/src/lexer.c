@@ -38,6 +38,20 @@ Token* tokenize(const char* input) {
             continue;
         }
 
+        // Traiter les parenthèses
+        if (*input == '(') {
+            tokens[token_count].type = TOKEN_PAREN_OPEN;
+            token_count++;
+            input++;
+            continue;
+        }
+        if (*input == ')') {
+            tokens[token_count].type = TOKEN_PAREN_CLOSE;
+            token_count++;
+            input++;
+            continue;
+        }
+
         // Caractère non reconnu
         tokens[token_count].type = TOKEN_ERROR;
         token_count++;

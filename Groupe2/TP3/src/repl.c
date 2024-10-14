@@ -175,6 +175,7 @@ int main()
                         double resultat = evaluer_postfixe(expression_postfixee);
                         printf("Resultat : %.2f\n", resultat);
                         expression_valide = 1;
+                        
                     } else {
                         printf("Erreur de syntaxe : %s\n", expr.messageErreur);
                     }

@@ -7,6 +7,8 @@
 typedef enum {
     TOKEN_NUMBER,
     TOKEN_OPERATOR,
+    TOKEN_PAREN_OPEN,
+    TOKEN_PAREN_CLOSE,
     TOKEN_END,
     TOKEN_ERROR
 } TokenType;

@@ -39,6 +39,21 @@ void infixe_vers_postfixe(const Token *tokens, char *output) {
             // Empile l'opérateur actuel
             pile[++sommet] = t.operator;
         }
+        else if (t.type == TOKEN_PAREN_OPEN) {
+            // Pousse la parenthèse ouvrante sur la pile
+            pile[++sommet] = '(';
+        }
+        else if (t.type == TOKEN_PAREN_CLOSE) {
+            // Dépile jusqu'à la parenthèse ouvrante
+            while (sommet >= 0 && pile[sommet] != '(') {
+                char op[3] = {pile[sommet--], ' ', '\0'}; // Retire l'opérateur du sommet
+                strcat(output, op); // Ajoute l'opérateur à la sortie
+            }
+            // Retire la parenthèse ouvrante
+            if (sommet >= 0) {
+                sommet--; // Retire la parenthèse ouvrante
+            }
+        }
     }
 
     // Dépile tous les opérateurs restants et les ajoute à la sortie
@@ -47,4 +62,3 @@ void infixe_vers_postfixe(const Token *tokens, char *output) {
         strcat(output, op);
     }
 }
-
