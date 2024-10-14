@@ -168,17 +168,10 @@ int main()
                 if (strlen(expression_postfixee) > 0) {
                     printf("Expression en notation postfixe : %s\n", expression_postfixee);
 
-                    // Étape 2 : Parseur
-                    ExpressionMath expr = parse(tokens);
-                    if (!expr.erreur) {
-                        // Étape 3 : Évaluation de l'expression en notation postfixée
-                        double resultat = evaluer_postfixe(expression_postfixee);
-                        printf("Resultat : %.2f\n", resultat);
-                        expression_valide = 1;
-                        
-                    } else {
-                        printf("Erreur de syntaxe : %s\n", expr.messageErreur);
-                    }
+                    // Étape 2 : Évaluation de l'expression en notation postfixée
+                    double resultat = evaluer_postfixe(expression_postfixee);
+                    printf("Resultat : %.2f\n", resultat);
+                    expression_valide = 1;
                 } else {
                     printf("Erreur de conversion en notation postfixe.\n");
                 }
