@@ -208,7 +208,6 @@ void analyser_affectation(char* nom, char* valeur_str) {
     }
 }
 
-
 void afficher_variable(Variable* var) {
     switch (var->type) {
         case ENTIER: printf("%d\n", var->valeur.entier); break;
