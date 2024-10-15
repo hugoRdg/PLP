@@ -2,6 +2,11 @@
 #define PARSEUR_H
 
 #include "lexer.h"
+#include "variables.h"
+#include "evaluation.h"
+
+void analyser_ligne(char* ligne);
+void analyser_affectation(char* nom, char* valeur_str);
 
 typedef struct {
     int erreur;

@@ -6,6 +6,8 @@
 #include "parseur.h"
 #include "evaluation.h"
 #include "postfixe.h"
+#include <stdbool.h>
+#include "variables.h"
 
 // Version de l'interpréteur
 #define VERSION "1.0.0"
@@ -35,16 +37,13 @@ void afficher_aide(const char *commande) {
 // Fonction pour traiter la commande echo
 void traiter_echo(const char *commande) {
     printf("Écho : ");
-    const char *texte = strstr(commande, "echo");
-    if (texte == NULL) {
-        texte = strstr(commande, "écho");
-    }
-    if (texte != NULL) {
-        texte += 4; // Saute "echo" ou "écho"
-        while (isspace(*texte)) texte++; // Saute les espaces
+    const char *texte = strstr(commande, "echo") ?: strstr(commande, "écho");
+    if (texte) {
+        texte += 4;
+        while (isspace(*texte)) texte++;
         printf("%s\n", texte);
     } else {
-        printf("Erreur : texte manquant après la commande echo/écho.\n");
+        printf("Erreur : texte manquant après echo.\n");
     }
 }
 
@@ -104,6 +103,24 @@ int sont_similaires(const char *str1, const char *str2) {
     return 1;
 }
 
+// Fonction pour vérifier si l'entrée ressemble à une expression arithmétique
+bool est_expression_arithmetique(const char *entree) {
+    bool contient_chiffre = false;
+    while (*entree) {
+        if (isdigit(*entree)) {
+            contient_chiffre = true;
+        }
+        // Vérifie si l'entrée contient des opérateurs ou des parenthèses
+        if ((*entree == '+' || *entree == '-' || *entree == '*' || *entree == '/' || 
+            *entree == '(' || *entree == ')') && contient_chiffre) {
+            return true; // Si on trouve un opérateur et un chiffre, on suppose que c'est une expression
+        }
+        entree++;
+    }
+    return false; // Pas une expression arithmétique
+}
+
+
 /**
  * Programme qui simule un interpréteur de commandes simple.
  * Il lit les commandes utilisateur et les traite en fonction de leur contenu.
@@ -154,36 +171,35 @@ int main()
             }
         }
 
-        // Si aucune commande reconnue n'a été trouvée, on essaie d'évaluer l'expression mathématique
+        // Si aucune commande reconnue n'a été trouvée, on vérifie si c'est une expression arithmétique
         if (!commande_trouvee) {
-            // Étape 1 : Tokenizeur
-            Token *tokens = tokenize(commande);
+            if (est_expression_arithmetique(commande)) {
+                Token *tokens = tokenize(commande);
+                if (tokens != NULL) {   
+                    char expression_postfixee[1024];
+                    infixe_vers_postfixe(tokens, expression_postfixee);
+                    
+                    if (strlen(expression_postfixee) > 0) {
+                        printf("Expression en notation postfixe : %s\n", expression_postfixee);
+                        double resultat = evaluer_postfixe(expression_postfixee);
+                        printf("Resultat : %.2f\n", resultat);
+                        expression_valide = 1;
+                    } else {
+                        printf("Erreur de syntaxe dans l'expression arithmétique.\n");
+                    }
 
-            if (tokens != NULL) {   
-                // Conversion de l'expression infixée en postfixée
-                char expression_postfixee[1024];
-                infixe_vers_postfixe(tokens, expression_postfixee);
-                
-                // Vérification que l'expression postfixée est correcte
-                if (strlen(expression_postfixee) > 0) {
-                    printf("Expression en notation postfixe : %s\n", expression_postfixee);
-
-                    // Étape 2 : Évaluation de l'expression en notation postfixée
-                    double resultat = evaluer_postfixe(expression_postfixee);
-                    printf("Resultat : %.2f\n", resultat);
-                    expression_valide = 1;
+                    free_tokens(tokens);
                 } else {
-                    printf("Erreur de conversion en notation postfixe.\n");
+                    printf("Erreur de tokenisation : l'expression ne peut être interprétée.\n");
                 }
-
-                // Libération des ressources
-                free_tokens(tokens);
             } else {
-                printf("Erreur de tokenisation : l'expression ne peut être interpretee.\n");
+                // Si aucune commande n'a été reconnue et que ce n'est pas une expression arithmétique, on analyse la ligne pour les variables
+                analyser_ligne(commande);
+                expression_valide = 1; // Considéré comme traité pour éviter un message de commande non reconnue
             }
         }
 
-        // Affiche un message d'erreur si aucune commande et aucune expression valide n'ont été trouvées
+        // Message d'erreur pour les commandes non reconnues
         if (!commande_trouvee && !expression_valide) {
             printf("Commande non reconnue. Essayez 'echo <texte>' pour afficher du texte, 'aide' ou 'help' pour afficher l'aide, ou 'quitter' ou 'quit' pour quitter.\n");
         }
