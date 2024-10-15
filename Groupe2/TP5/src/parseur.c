@@ -147,51 +147,67 @@ void analyser_affectation(char* nom, char* valeur_str) {
         type = REEL; // Définir le type comme nombre réel
         double val = atof(valeur_str); // Convertir la chaîne en double
 
-        // Vérifier si la variable existe et si le type est correct
-        if (var && !verifier_type_variable(nom, type)) {
-            printf("Erreur : changement de type non autorise pour la variable %s\n", nom);
-            return; // Sortir si le changement de type est interdit
+        // Si la variable existe déjà
+        if (var) {
+            // Vérifier le type de la variable
+            if (verifier_type_variable(nom, type)) {
+                var->valeur.reel = val; // Mettre à jour la valeur
+                printf("Variable %s redefinie avec la valeur %.2f (nombre reel)\n", nom, val);
+            } else {
+                printf("Erreur : changement de type non autorise pour la variable %s\n", nom);
+            }
+        } else {
+            // Ajouter la variable avec sa valeur et son type
+            ajouter_variable(nom, type, &val);
+            printf("Variable %s definie avec la valeur %.2f (nombre reel)\n", nom, val); // Afficher le résultat
         }
-
-        // Ajouter la variable avec sa valeur et son type
-        ajouter_variable(nom, type, &val);
-        printf("Variable %s definie avec la valeur %.2f (nombre reel)\n", nom, val); // Afficher le résultat
 
     // Vérifier si la valeur est un entier
     } else if (isdigit(valeur_str[0]) || (valeur_str[0] == '0' && valeur_str[1] == '\0')) {
         type = ENTIER; // Définir le type comme entier
         int val = atoi(valeur_str); // Convertir la chaîne en entier
 
-        // Vérifier si la variable existe et si le type est correct
-        if (var && !verifier_type_variable(nom, type)) {
-            printf("Erreur : changement de type non autorise pour la variable %s\n", nom);
-            return; // Sortir si le changement de type est interdit
+        // Si la variable existe déjà
+        if (var) {
+            // Vérifier le type de la variable
+            if (verifier_type_variable(nom, type)) {
+                var->valeur.entier = val; // Mettre à jour la valeur
+                printf("Variable %s redefinie avec la valeur %d (entier)\n", nom, val);
+            } else {
+                printf("Erreur : changement de type non autorise pour la variable %s\n", nom);
+            }
+        } else {
+            // Ajouter la variable avec sa valeur et son type
+            ajouter_variable(nom, type, &val);
+            printf("Variable %s definie avec la valeur %d (entier)\n", nom, val); // Afficher le résultat
         }
 
-        // Ajouter la variable avec sa valeur et son type
-        ajouter_variable(nom, type, &val);
-        printf("Variable %s definie avec la valeur %d (entier)\n", nom, val); // Afficher le résultat
-        
     // Vérifier si la valeur est une chaîne de caractères (entourée de guillemets)
     } else if (valeur_str[0] == '\"' && valeur_str[strlen(valeur_str) - 1] == '\"') {
         type = CHAINE; // Définir le type comme chaîne
         valeur_str[strlen(valeur_str) - 1] = '\0'; // Retirer le guillemet fermant
 
-        // Vérifier si la variable existe et si le type est correct
-        if (var && !verifier_type_variable(nom, type)) {
-            printf("Erreur : changement de type non autorise pour la variable %s\n", nom);
-            return; // Sortir si le changement de type est interdit
+        // Si la variable existe déjà
+        if (var) {
+            // Vérifier le type de la variable
+            if (verifier_type_variable(nom, type)) {
+                strcpy(var->valeur.chaine, valeur_str + 1); // Mettre à jour la valeur
+                printf("Variable %s redefinie avec la valeur \"%s\" (chaine de caracteres)\n", nom, valeur_str + 1);
+            } else {
+                printf("Erreur : changement de type non autorise pour la variable %s\n", nom);
+            }
+        } else {
+            // Ajouter la variable avec sa valeur et son type
+            ajouter_variable(nom, type, valeur_str + 1); // Retirer le guillemet ouvrant
+            printf("Variable %s definie avec la valeur \"%s\" (chaine de caracteres)\n", nom, valeur_str + 1); // Afficher le résultat
         }
-
-        // Ajouter la variable avec sa valeur et son type
-        ajouter_variable(nom, type, valeur_str + 1); // Retirer le guillemet ouvrant
-        printf("Variable %s definie avec la valeur \"%s\" (chaine de caracteres)\n", nom, valeur_str + 1); // Afficher le résultat
 
     } else {
         // Si aucun des formats attendus n'est respecté, afficher une erreur
         printf("Erreur : format de valeur incorrect pour %s\n", nom);
     }
 }
+
 
 void afficher_variable(Variable* var) {
     switch (var->type) {
