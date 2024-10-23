@@ -36,7 +36,7 @@ void afficher_aide(const char *commande) {
 
 // Fonction pour traiter la commande echo
 void traiter_echo(const char *commande) {
-    printf("Écho : ");
+    printf("Echo: ");
     const char *texte = strstr(commande, "echo") ?: strstr(commande, "écho");
     if (texte) {
         texte += 4;
@@ -65,42 +65,70 @@ void to_lower(char *str) {
     }
 }
 
-// Fonction pour vérifier si deux chaînes sont similaires
 int sont_similaires(const char *str1, const char *str2) {
-    // Calcule la longueur des deux chaînes
-    int len1 = strlen(str1);
+    // On extrait d'abord le premier mot de str1
+    char premier_mot[1024];
+    int i = 0;
+    while (str1[i] && !isspace(str1[i]) && i < 1023) {
+        premier_mot[i] = str1[i];
+        i++;
+    }
+    premier_mot[i] = '\0';
+
+    // Calcule la longueur des chaînes
+    int len1 = strlen(premier_mot);
     int len2 = strlen(str2);
     
     // Si la différence de longueur est supérieure à 2, les chaînes sont considérées comme trop différentes
     if (abs(len1 - len2) > 2) return 0;
 
-    int diff = 0;  // Compteur de différences entre les chaînes
-    int i = 0, j = 0;  // Indices pour parcourir str1 et str2 respectivement
+    int diff = 0;
+    i = 0;
+    int j = 0;
     
-    // Parcourt les deux chaînes simultanément
     while (i < len1 && j < len2) {
-        // Compare les caractères en les convertissant en minuscules
-        if (tolower((unsigned char)str1[i]) != tolower((unsigned char)str2[j])) {
-            diff++; 
+        if (tolower((unsigned char)premier_mot[i]) != tolower((unsigned char)str2[j])) {
+            diff++;
+            if (diff > 2) return 0;
             
-            if (diff > 2) return 0; // Trop de différences
-            
-            // Gestion des différences de longueur ou des caractères insérés/supprimés
-            if (len1 > len2) i++;  // str1 plus longue, on avance dans str1
-            else if (len2 > len1) j++;  // str2 plus longue, on avance dans str2
+            if (len1 > len2) i++;
+            else if (len2 > len1) j++;
             else {
-                // Même longueur, on avance dans les deux chaînes
                 i++;
                 j++;
             }
         } else {
-            // Les caractères sont identiques, on avance dans les deux chaînes
             i++;
             j++;
         }
     }
 
     return 1;
+}
+
+// Fonction pour vérifier si une chaîne commence par une commande
+bool est_commande(const char *ligne, const char *commande) {
+    size_t len_commande = strlen(commande);
+    if (strncmp(ligne, commande, len_commande) == 0) {
+        // Vérifie si le caractère suivant est un espace ou la fin de la chaîne
+        return (ligne[len_commande] == ' ' || ligne[len_commande] == '\0');
+    }
+    return false;
+}
+
+// Modification de la fonction verifier_si_commande
+bool verifier_si_commande(const char *ligne, const Commande *commandes, int nombre_commandes) {
+    char ligne_lower[1024];
+    strcpy(ligne_lower, ligne);
+    to_lower(ligne_lower);
+
+    for (int i = 0; i < nombre_commandes; i++) {
+        if (sont_similaires(ligne_lower, commandes[i].nom) || 
+            sont_similaires(ligne_lower, commandes[i].alias)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Fonction pour vérifier si l'entrée ressemble à une expression arithmétique
@@ -161,50 +189,48 @@ int main()
         int commande_trouvee = 0; // Variable pour vérifier si la commande a été trouvée
         int expression_valide = 0; // Variable pour vérifier si une expression a été évaluée
 
-        // Traite la commande en fonction de son contenu
-        for (int i = 0; i < nombre_commandes; i++) {
-            if (sont_similaires(commande_lower, commandes[i].nom) || 
-                sont_similaires(commande_lower, commandes[i].alias)) {
-                commandes[i].fonction(commande);
-                commande_trouvee = 1;
-                break;
+        // Vérifie d'abord si c'est une commande
+        if (verifier_si_commande(commande, commandes, nombre_commandes)) {
+            // Traite la commande
+            for (int i = 0; i < nombre_commandes; i++) {
+                if (sont_similaires(commande_lower, commandes[i].nom) || 
+                    sont_similaires(commande_lower, commandes[i].alias)) {
+                    commandes[i].fonction(commande);
+                    commande_trouvee = 1;
+                    break;
+                }
             }
         }
-
-        // Si aucune commande reconnue n'a été trouvée, on vérifie si c'est une expression arithmétique
-        if (!commande_trouvee) {
-            if (est_expression_arithmetique(commande)) {
-                Token *tokens = tokenize(commande);
-                if (tokens != NULL) {   
-                    char expression_postfixee[1024];
-                    infixe_vers_postfixe(tokens, expression_postfixee);
-                    
-                    if (strlen(expression_postfixee) > 0) {
-                        printf("Expression en notation postfixe : %s\n", expression_postfixee);
-                        double resultat = evaluer_postfixe(expression_postfixee);
-                        printf("Resultat : %.2f\n", resultat);
-                        expression_valide = 1;
-                    } else {
-                        printf("Erreur de syntaxe dans l'expression arithmétique.\n");
-                    }
-
-                    free_tokens(tokens);
+        // Si ce n'est pas une commande, vérifie si c'est une expression arithmétique
+        else if (est_expression_arithmetique(commande)) {
+            Token *tokens = tokenize(commande);
+            if (tokens != NULL) {   
+                char expression_postfixee[1024];
+                infixe_vers_postfixe(tokens, expression_postfixee);
+                
+                if (strlen(expression_postfixee) > 0) {
+                    printf("Expression en notation postfixe : %s\n", expression_postfixee);
+                    double resultat = evaluer_postfixe(expression_postfixee);
+                    printf("Resultat : %.2f\n", resultat);
+                    expression_valide = 1;
                 } else {
-                    printf("Erreur de tokenisation : l'expression ne peut être interprétée.\n");
+                    printf("Erreur de syntaxe dans l'expression arithmétique.\n");
                 }
-            } else {
-                // Si aucune commande n'a été reconnue et que ce n'est pas une expression arithmétique, on analyse la ligne pour les variables
-                analyser_ligne(commande);
-                expression_valide = 1; // Considéré comme traité pour éviter un message de commande non reconnue
+                free_tokens(tokens);
             }
+        }
+        // Si ce n'est ni une commande ni une expression arithmétique, traite comme une variable
+        else {
+            analyser_ligne(commande);
+            expression_valide = 1;
         }
 
         // Message d'erreur pour les commandes non reconnues
         if (!commande_trouvee && !expression_valide) {
-            printf("Commande non reconnue. Essayez 'echo <texte>' pour afficher du texte, 'aide' ou 'help' pour afficher l'aide, ou 'quitter' ou 'quit' pour quitter.\n");
+            printf("Commande non reconnue. Essayez 'aide' pour voir les commandes disponibles.\n");
         }
 
-        printf("\n"); // Saut de ligne après la sortie
+        printf("\n");
     }
 
     return 0;

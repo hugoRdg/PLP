@@ -125,7 +125,7 @@ void analyser_ligne(char* ligne) {
             afficher_variable(var);
         } else {
             // Ne pas afficher de message d'erreur ici pour éviter le message de commande non reconnue
-            printf("Erreur : la variable %s n'est pas définie\n", nom_var);
+            printf("Erreur : la variable %s n'est pas definie\n", nom_var);
         }
     }
 }
