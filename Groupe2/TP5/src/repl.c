@@ -8,6 +8,7 @@
 #include "postfixe.h"
 #include <stdbool.h>
 #include "variables.h"
+#include "lambda.h"
 
 // Version de l'interpréteur
 #define VERSION "1.0.0"
@@ -200,6 +201,18 @@ int main()
                     break;
                 }
             }
+        }
+        // Vérification expression lambda
+        else if (strncmp(commande, "(lambda ", 7) == 0) {
+            ExpressionLambda expr = parser_lambda(commande);
+            if (!expr.erreur) {
+                double resultat = evaluer_lambda(expr);
+                printf("Resultat : %.2f\n", resultat);
+            } else {
+                printf("Erreur : %s\n", expr.messageErreur);
+            }
+            liberer_expression_lambda(&expr);
+            expression_valide = 1;
         }
         // Si ce n'est pas une commande, vérifie si c'est une expression arithmétique
         else if (est_expression_arithmetique(commande)) {
