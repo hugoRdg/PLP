@@ -10,6 +10,12 @@ Ce projet consiste en l'intégration d'un évaluateur d'expressions arithmétiqu
 * Niveau moyen / difficile : Le projet nécessite une compréhension des structures de données (notamment les piles) et des algorithmes de conversion entre notations infixée et postfixée.
 * 
 
+L'objectif de ce TP est d'explorer et d'améliorer un interpréteur de commandes en C. Ce TP se concentre sur les aspects suivants :
+- Comprendre le fonctionnement de l'interpréteur de commandes.
+- Ajouter de nouvelles fonctionnalités à l'interpréteur.
+- Supporter les commandes en français, y compris la gestion des accents et des caractères spéciaux.
+- Créer un évaluateur pour les expressions mathématiques à l'aide d'un tokenizeur, d'un parseur et d'une fonction d'évaluation.
+
 # Commentaires
 * Le projet a été développé pour explorer les concepts de parsing et d'évaluation des expressions arithmétiques.
 * Les fonctionnalités principales incluent :
